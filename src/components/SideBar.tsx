@@ -10,6 +10,13 @@ import { MdOutlineDarkMode } from 'react-icons/md'
 import About from './About'
 
 
+type ActiveChatType = {
+  conversation: conversationType,
+  user: string
+  openBody: boolean,
+  setOpenBody: (open: boolean) => void;
+
+}
 
 const endpoint: string = "http://localhost:9000/api/v1/conversation"
 
@@ -18,7 +25,7 @@ type conversationType = {
   _id: string
 }
 
-function SideBar() {
+function SideBar({ openBody, setOpenBody }: ActiveChatType) {
   const [conversation, setConversation] = useState<conversationType[]>([])
   const users = useSelector((state: RootState) => state.user.userInfo)
   const [open, setOpen] = useState<number>(0)
@@ -71,14 +78,14 @@ function SideBar() {
         </div>
 
         {/* Chat */}
-        <div className='px-10 py-2'>
+        <div className='px-5 py-2'>
           <h2 className='text-[1rem] font-bold'>Chats</h2>
         </div>
 
 
         <div className='flex flex-col mx-2 gap-7 overflow-y-scroll h-[50%] scrollbar-hide'>
           {conversation.map((item) => (
-            <ActiveChat conversation={item} key={item._id} user={users.user._id} />
+            <ActiveChat openBody={openBody} setOpenBody={setOpenBody} conversation={item} key={item._id} user={users.user._id} />
           ))}
 
         </div>

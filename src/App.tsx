@@ -14,12 +14,12 @@ import Home from './pages/Home'
 
 function App() {
   const location = useLocation()
-  const [openBody, setOpenBody] = useState(true)
+  const [openBody, setOpenBody] = useState<boolean>(true)
 
   return (
     <Body>
       {location.pathname === "/login" || location.pathname === "/register" ? null : (
-        <SideBar />
+        <SideBar openBody={openBody} setOpenBody={setOpenBody} />
       )}
 
       <div className={openBody ? "bodyPage active" : "bodyPage"}>
@@ -27,7 +27,7 @@ function App() {
           <Route path='/' element={<AddFriendPage />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/chat/:conversation' element={<Conversation />} />
+          <Route path='/chat/:conversation' element={<Conversation openBody={openBody} setOpenBody={setOpenBody}  />} />
 
 
         </Routes>
@@ -54,7 +54,7 @@ const Body = styled.div`
     @media screen and (max-width: 800px) {
       position: absolute;
       top: 0;
-      left:100%;
+      left:-100%;
 
 
     }

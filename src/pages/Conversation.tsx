@@ -11,7 +11,7 @@ interface messageType {
     "conversationId": string,
     "message": string,
 }
-function Conversation() {
+function Conversation({setOpenBody, openBody}: {setOpenBody:boolean}) {
 
     const { conversation } = useParams<string>()
  
@@ -21,7 +21,7 @@ function Conversation() {
 
     return (
         <div className='w-full'>
-            <HomeComp conversationIdd={conversation} />
+            <HomeComp setOpenBody={setOpenBody} openBody={openBody}  conversationIdd={conversation} />
 
         </div>
     )

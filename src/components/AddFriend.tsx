@@ -25,7 +25,7 @@ const AddFriend = () => {
     useEffect(() => {
         const FetchData = async () => {
             await axios.get("http://localhost:9000/api/v1/user/all").then((res) => {
-                console.log(res.data)
+               
                 setUser(res.data)
             })
         }
@@ -74,9 +74,9 @@ const AddFriend = () => {
                                     }).then((res) => {
                                         try {
                                             navigate(`/chat/${res.data._id}`)
-                                            console.log(res.data, item._id)
+                                           
                                         } catch (err) {
-                                            console.log(err)
+                                           
                                         }
                                     })
                                 }

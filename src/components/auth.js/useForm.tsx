@@ -36,7 +36,7 @@ export const useForm = () => {
         setLoading(true)
         await axios.post(`${endpoint}/register`, data).then((res) => {
             try {
-                console.log(res.data)
+              
                 dispatch(userAction.getUser(res.data));
 
                 setLoading(false)
@@ -56,7 +56,6 @@ export const useForm = () => {
         setLoading(true)
         await axios.post(`${endpoint}/login`, data).then((res) => {
             try {
-                console.log(res.data)
                 setLoading(false)
                 dispatch(userAction.getUser(res.data));
 

@@ -15,7 +15,7 @@ function ChatBox({ msg }: { msg: messageType }) {
     const users = useSelector((state: RootState) => state.user.userInfo)
 
     const compare = msg.senderId === users.user._id
-    console.log(compare)
+    
 
     return (
         <div>
@@ -24,7 +24,9 @@ function ChatBox({ msg }: { msg: messageType }) {
                     <div className='bg-[#7269ef] p-3 rounded-md'>
                         <p className='text-white break-words'>{msg.message}</p>
                         <span className='text-[0.6rem] text-[#ffff]'>
-                            <ReactTimeAgo date={msg.createdAt} locale="en-US" />
+                            {/* <ReactTimeAgo
+                                // date={msg?.createdAt}
+                                locale="en-US" /> */}
 
                         </span>
                     </div>
@@ -45,7 +47,9 @@ function ChatBox({ msg }: { msg: messageType }) {
                     <div className='bg-[#f7f7ff] p-3 rounded-md'>
                         <p className=' break-words'>{msg.message}</p>
                         <span className='text-[0.6rem] text-[#7a7f9a]'>
-                            <ReactTimeAgo date={msg.createdAt} locale="en-US" />
+                            {/* <ReactTimeAgo
+                                // date={msg?.createdAt}
+                                locale="en-US" /> */}
 
                         </span>
                     </div>

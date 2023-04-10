@@ -11,7 +11,8 @@ import ChatBox from "./ChatBox"
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { RootState } from '../type'
-
+import { BsArrowLeftCircleFill } from 'react-icons/bs'
+import Pusher from "pusher-js"
 interface messageType {
     _id: string,
     senderId: string,
@@ -24,14 +25,16 @@ interface messageType {
 
 interface allType {
     message: messageType[],
-    conversationIdd: string
+    conversationIdd: string,
+    openBody: boolean,
+    setOpenBody: (open: boolean) => void;
 
 }
 
 
 const endpoint: string = "http://localhost:9000/api/v1/message/"
 
-const HomeComp: React.FC<allType> = ({ conversationIdd }) => {
+const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody }) => {
     const users = useSelector((state: RootState) => state.user.userInfo)
 
 
@@ -39,8 +42,7 @@ const HomeComp: React.FC<allType> = ({ conversationIdd }) => {
     const [message, setMessage] = useState<messageType[]>([])
     const [openEmoji, setOpenEmoji] = useState<boolean>(false)
     const [allUser, setAllUser] = useState<[]>([])
-
-    // const socket = useRef(io("ws://localhost:8900"))
+    const [mmm, setMmm] = useState()
 
     function onClick(emojiData: EmojiClickData, event: MouseEvent) {
         setMsg(msg + (emojiData.emoji));
@@ -62,7 +64,20 @@ const HomeComp: React.FC<allType> = ({ conversationIdd }) => {
         fetchMessage()
     }, [])
 
-    console.log(allUser)
+    useEffect(() => {
+
+        const pusher = new Pusher('8eb4386a18c23cd290ee', {
+            cluster: 'mt1',
+        });
+        var channel = pusher.subscribe('message');
+        channel.bind('event', function (data: any) {
+            setMmm(data);
+        console.log(mmm)
+
+        });
+        console.log(mmm)
+
+    }, [])
 
 
     // Fetch All Messages 
@@ -92,11 +107,12 @@ const HomeComp: React.FC<allType> = ({ conversationIdd }) => {
 
         const userId = users.user._id
         const data = { conversationId: conversationIdd, message: msg, senderId: userId }
-        console.log(data)
+
 
         await axios.post(endpoint, data).then((res) => {
             try {
                 setMessage([...message, res.data])
+                console.log(res.data)
                 setMsg("")
 
             } catch (err) {
@@ -116,18 +132,22 @@ const HomeComp: React.FC<allType> = ({ conversationIdd }) => {
 
 
     return (
-        <div className='relative h-full w-full '>
+        <div className='relative h-full w-full overflow-y-hidden '>
             {/* Header */}
 
             <div className='w-full h-16 border-b-2 '>
+
                 <div className='flex items-center gap-3 h-full pl-6'>
-                    <img src="/image/pjimage-49-7.jpg" width={30} height={40} alt="Messanger chat"
-                        className='rounded-full'
+                    <div onClick={() => setOpenBody(!openBody)}>
+                        <BsArrowLeftCircleFill className='text-[#7269ef] ' size={30} />
+                    </div>
+                    <img src="/image/pjimage-49-7.jpg" alt="Messanger chat"
+                        className='rounded-full w-[30px] '
                     />
 
                     <div className='flex items-center gap-1'>
                         <h2 className='text-sm font-semibold'>Patrick Hedrick</h2>
-                        <div className='w-2 h-2 rounded-full bg-green-600 border-white border '></div>
+                        <div className='w-2 h-2  rounded-full bg-green-600 border-white border '></div>
 
                     </div>
                 </div>
