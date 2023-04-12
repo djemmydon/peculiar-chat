@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { Routes, Route, useLocation } from "react-router-dom"
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom"
 import styled from 'styled-components'
 
 import './App.css'
@@ -9,13 +10,20 @@ import AddFriendPage from './pages/AddFriend'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import Conversation from './pages/Conversation'
-import Home from './pages/Home'
+import { RootState } from './type'
 
 
 function App() {
   const location = useLocation()
   const [openBody, setOpenBody] = useState<boolean>(true)
+  const users = useSelector((state: RootState) => state.user.userInfo)
+  const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!users.token) {
+      navigate("/login")
+    }
+  }, [users])
   return (
     <Body>
       {location.pathname === "/login" || location.pathname === "/register" ? null : (

@@ -38,11 +38,11 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
     const users = useSelector((state: RootState) => state.user.userInfo)
 
 
-    const [msg, setMsg] = useState("")
+    const [msg, setMsg] = useState<string>("")
     const [message, setMessage] = useState<messageType[]>([])
     const [openEmoji, setOpenEmoji] = useState<boolean>(false)
     const [allUser, setAllUser] = useState<[]>([])
-    const [mmm, setMmm] = useState()
+    const scroll = useRef()
 
     function onClick(emojiData: EmojiClickData, event: MouseEvent) {
         setMsg(msg + (emojiData.emoji));
@@ -64,29 +64,26 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
         fetchMessage()
     }, [])
 
-    useEffect(() => {
 
-        const pusher = new Pusher('8eb4386a18c23cd290ee', {
-            cluster: 'mt1',
-        });
-        var channel = pusher.subscribe('message');
-        channel.bind('event', function (data: any) {
-            setMmm(data);
-        console.log(mmm)
-
-        });
-        console.log(mmm)
-
-    }, [])
 
 
     // Fetch All Messages 
+
+
+
+
+    useEffect(() => {
+        scroll.current?.scrollIntoView({ behavior: "smooth" })
+    }, [message])
+
+
     useEffect(() => {
         const fetchMessage = async () => {
             await axios.get(endpoint + conversationIdd).then((res) => {
                 try {
-
                     setMessage(res.data)
+                    console.log(message)
+
                 } catch (error) {
                     console.error(error)
                 }
@@ -94,8 +91,13 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
 
         }
 
+
         fetchMessage()
     }, [])
+
+
+
+
 
     // Create New Messagesg
 
@@ -111,10 +113,10 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
 
         await axios.post(endpoint, data).then((res) => {
             try {
-                setMessage([...message, res.data])
-                console.log(res.data)
-                setMsg("")
+              
 
+
+                setMsg('')
             } catch (err) {
 
             }
@@ -157,7 +159,11 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
             {/* Chat Box */}
             <div className=" h-[70vh] flex flex-col pt-10 mt-6 px-10 overflow-y-scroll scrollbar-hide ">
                 {message?.map(item => (
-                    <ChatBox msg={item} key={item._id} />
+                    <div ref={scroll}>
+
+
+                        <ChatBox msg={item} key={item._id} />
+                    </div>
                 ))}
 
 
