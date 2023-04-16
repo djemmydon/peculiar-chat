@@ -10,35 +10,20 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import ChatBox from "./ChatBox"
 import axios from 'axios'
 import { useSelector } from 'react-redux'
-import { RootState } from '../type'
+import { allType, messageType, RootState } from '../type'
 import { BsArrowLeftCircleFill } from 'react-icons/bs'
 import Pusher from "pusher-js"
-interface messageType {
-    _id: string,
-    senderId: string,
-    conversationId: string
-    message: string,
-    createdAt: string,
-    userName: string
-
-}
-
-interface allType {
-    message: messageType[],
-    conversationIdd: string,
-    openBody: boolean,
-    setOpenBody: (open: boolean) => void;
-
-}
+import styled from 'styled-components'
 
 
-const endpoint: string = "http://localhost:9000/api/v1/message/"
 
-const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody }) => {
+
+const HomeComp: React.FC<allType> = ({ setOpenBody, openBody }) => {
     const users = useSelector((state: RootState) => state.user.userInfo)
     const conversationId = useSelector((state: RootState) => state.user.conversationId)
+    const endpoint = import.meta.env.VITE_APP_ENDPOINT
 
-    console.log(conversationId)
+
 
     const [msg, setMsg] = useState<string>("")
     const [message, setMessage] = useState<messageType[]>([])
@@ -50,21 +35,21 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
         setMsg(msg + (emojiData.emoji));
     }
 
-    useEffect(() => {
-        const fetchMessage = async () => {
-            await axios.get("http://localhost:9000/api/v1/user/all").then((res) => {
-                try {
-                    const all = res.data.map((item: any) => item)
-                    setAllUser(all)
-                } catch (error) {
-                    console.error(error)
-                }
-            })
+    // useEffect(() => {
+    //     const fetchMessage = async () => {
+    //         await axios.get("http://localhost:9000/api/v1/").then((res) => {
+    //             try {
+    //                 const all = res.data.map((item: any) => item)
+    //                 setAllUser(all)
+    //             } catch (error) {
+    //                 console.error(error)
+    //             }
+    //         })
 
-        }
+    //     }
 
-        fetchMessage()
-    }, [])
+    //     fetchMessage()
+    // }, [])
 
 
 
@@ -78,7 +63,7 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
             cluster: "mt1",
         });
 
-    
+
 
         pusher.subscribe("")
 
@@ -93,7 +78,7 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
 
     useEffect(() => {
         const fetchMessage = async () => {
-            await axios.get(endpoint + conversationId).then((res) => {
+            await axios.get(`${endpoint}/message/${conversationId}`).then((res) => {
                 try {
                     setMessage(res.data)
                     console.log(message)
@@ -128,6 +113,9 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
         await axios.post(endpoint, data).then((res) => {
             try {
 
+
+                setMessage([...message, res.data])
+
                 setMsg('')
             } catch (err) {
 
@@ -146,22 +134,18 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
 
 
     return (
-        <div className='relative h-full w-full overflow-y-hidden '>
+        <ChatSide className='relative h-full w-full overflow-y-hidden bg-gradient-to-tr  to-blue-500 from-gray-300 '>
             {/* Header */}
 
             <div className='w-full h-16 border-b-2 '>
 
-                <div className='flex items-center gap-3 h-full pl-6'>
+                <div className='flex items-center gap-3 h-full pl-6 bg-white'>
                     <div onClick={() => setOpenBody(!openBody)}>
                         <BsArrowLeftCircleFill className='text-[#7269ef] ' size={30} />
                     </div>
-                    <img src="/image/pjimage-49-7.jpg" alt="Messanger chat"
-                        className='rounded-full w-[30px] '
-                    />
 
-                    <div className='flex items-center gap-1'>
-                        <h2 className='text-sm font-semibold'>Patrick Hedrick</h2>
-                        <div className='w-2 h-2  rounded-full bg-green-600 border-white border '></div>
+
+                    <div className='flex items-center gap-1 '>
 
                     </div>
                 </div>
@@ -170,11 +154,14 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
 
             {/* Chat Box */}
 
-            {!message && !conversationId ? (<>
-                this is invalid
-            </>) :
+            {!conversationId ? (<div className='h-[80vh] w-full flex items-center justify-center  '>
+                <div className=' m-auto '>
+                    <h2 className='text-6xl'>Start A Chat😊</h2>
 
-                (<div className=" h-[70vh] flex flex-col pt-10 mt-6 px-10 overflow-y-scroll scrollbar-hide ">
+                </div>
+            </div>) :
+
+                (<div className=" h-[80vh] flex flex-col  mt-6 px-10 overflow-y-scroll scrollbar-hide ">
                     {message?.map(item => (
                         <div ref={scroll}>
 
@@ -191,7 +178,7 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
 
 
             {/* Chstinput */}
-            <div>
+            <div className='bg-white'>
                 <form action="" className="h-full w-full   top-[50rem] flex items-center border-t-2">
                     <div className="  py-10 w-full flex  items-end justify-center gap-1  px-10 ">
                         <input onChangeCapture={OnchangeHandler} value={msg} className="w-full h-10 border-2 bg-[#e6ebf5]  outline-none rounded px-4" type="text" placeholder="Type message here" onChange={(e) => setMsg(e.target.value)} />
@@ -221,8 +208,17 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
                 </form>
             </div>
 
-        </div>
+        </ChatSide>
     )
 }
 
 export default HomeComp
+
+
+
+
+
+const ChatSide = styled.div`
+    /* background-image: url("/image/backg.jpg") */
+
+`

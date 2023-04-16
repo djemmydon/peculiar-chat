@@ -1,15 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import ReactTimeAgo from 'react-time-ago'
-import { RootState } from '../type'
-interface messageType {
-    "_id": string,
-    "senderId": string,
-    "conversationId": string,
-    "message": string,
-    "userName": string,
-    "createdAt": string
-}
+import styled from 'styled-components'
+import { messageType, RootState } from '../type'
 
 function ChatBox({ msg }: { msg: messageType }) {
     const users = useSelector((state: RootState) => state.user.userInfo)
@@ -18,7 +11,7 @@ function ChatBox({ msg }: { msg: messageType }) {
     
 
     return (
-        <div>
+        <Body>
             {!compare && <div className='w-[400px]  h-[40px] mt-10 rounded flex'>
                 <div className='float-right max-w-sm'>
                     <div className='bg-[#7269ef] p-3 rounded-md'>
@@ -65,8 +58,13 @@ function ChatBox({ msg }: { msg: messageType }) {
                 </div>
             </div>}
 
-        </div>
+        </Body>
     )
 }
 
 export default ChatBox
+
+
+const Body = styled.div`
+
+`

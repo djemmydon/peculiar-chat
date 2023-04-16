@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux"
 import { userAction } from "../../redux/userSlice"
 
 
-const endpoint: string = "http://localhost:9000/api/v1/auth/"
+const endpoint: string = `${import.meta.env.VITE_APP_ENDPOINT}/auth`
 
 export const useForm = () => {
 
@@ -36,7 +36,7 @@ export const useForm = () => {
         setLoading(true)
         await axios.post(`${endpoint}/register`, data).then((res) => {
             try {
-              
+
                 dispatch(userAction.getUser(res.data));
 
                 setLoading(false)

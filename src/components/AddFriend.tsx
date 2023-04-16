@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import { useNavigate,  } from "react-router-dom"
+import { useNavigate, } from "react-router-dom"
 import styled from "styled-components"
 import { RootState } from "../type"
 
@@ -12,7 +12,7 @@ interface messageType {
     message: string,
     createdAt: string,
     userName: string,
-    email:string
+    email: string
 
 }
 
@@ -20,12 +20,13 @@ const AddFriend = () => {
     const users = useSelector((state: RootState) => state.user.userInfo)
     const [user, setUser] = useState<messageType[]>([])
     const navigate = useNavigate()
-   
+    const endpoint = import.meta.env.VITE_APP_ENDPOINT
+
 
     useEffect(() => {
         const FetchData = async () => {
-            await axios.get("http://localhost:9000/api/v1/user/all").then((res) => {
-               
+            await axios.get(`${endpoint}/user/all`).then((res) => {
+
                 setUser(res.data)
             })
         }
@@ -68,15 +69,15 @@ const AddFriend = () => {
                                 <button onClick={async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
                                     event.preventDefault()
                                     await axios.post("http://localhost:9000/api/v1/conversation", {
-                                        receiverId:item._id,
+                                        receiverId: item._id,
                                         senderId: users.user._id,
-                                      
+
                                     }).then((res) => {
                                         try {
                                             navigate(`/chat/${res.data._id}`)
-                                           
+
                                         } catch (err) {
-                                           
+
                                         }
                                     })
                                 }

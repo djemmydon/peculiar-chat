@@ -23,11 +23,14 @@ type ActiveChatType = {
     setOpenBody: (open: boolean) => void;
 
 }
-const endpoint: string = "http://localhost:9000/api/v1"
+const endpoint: string = import.meta.env.VITE_APP_ENDPOINT
 
 function ActiveChat({ conversation, user, openBody, setOpenBody }: ActiveChatType) {
     const [getUser, setGetuser] = useState<userType | null>()
+    const [newMessage, setNewMessage] = useState<string>("")
     const dispatch = useDispatch()
+
+
 
     useEffect(() => {
         const friendId = conversation?.members?.find((c: string) => c !== user)
@@ -35,12 +38,18 @@ function ActiveChat({ conversation, user, openBody, setOpenBody }: ActiveChatTyp
         const fetchType = async () => {
             await axios.get(`${endpoint}/user?userId=${friendId}`).then((res) => {
                 setGetuser(res.data)
+                // console.log(res.data)
 
             })
         }
         fetchType()
 
     }, [])
+
+
+
+
+
     return (
         <div onClick={() => {
             dispatch(userAction.savedConversationId(conversation?._id))
@@ -54,7 +63,6 @@ function ActiveChat({ conversation, user, openBody, setOpenBody }: ActiveChatTyp
             <div className='flex justify-between w-full'>
                 <div className=''>
                     <h2>{getUser?.userName}</h2>
-                    <p className='text-[14px] text-gray-400'>Okay Sure ❤️😂</p>
                 </div>
 
                 <div className=''>

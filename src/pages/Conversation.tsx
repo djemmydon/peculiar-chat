@@ -2,28 +2,22 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import HomeComp from '../components/HomeComp'
+import { ActiveChatType } from '../type'
 
-const endpoint: string = "http://localhost:9000/api/v1/message/"
+const endpoint: string = `${import.meta.env.VITE_APP_ENDPOINT}/message`
 
-interface messageType {
-    "_id": string,
-    "senderId": string,
-    "conversationId": string,
-    "message": string,
-}
-function Conversation({setOpenBody, openBody}: {setOpenBody:boolean}) {
 
-    const { conversation } = useParams<string>()
- 
-    
+function Conversation({ setOpenBody, openBody }: ActiveChatType) {
+
+
 
 
 
 
     return (
         <div className='w-full'>
-            
-            <HomeComp setOpenBody={setOpenBody} openBody={openBody}  conversationIdd={conversation} />
+
+            <HomeComp setOpenBody={setOpenBody} openBody={openBody} />
 
         </div>
     )

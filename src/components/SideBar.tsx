@@ -2,24 +2,19 @@ import React, { useEffect, useState } from 'react'
 import ActiveUser from "./ActiveUser"
 import ActiveChat from "./ActiveChat"
 import { useSelector } from 'react-redux'
-import { RootState } from '../type'
+import { ActiveChatType, RootState } from '../type'
 import axios from 'axios'
 import styled from 'styled-components'
 import { BsChatDots, BsCodeSlash, BsFillChatDotsFill } from 'react-icons/bs'
 import { MdOutlineDarkMode } from 'react-icons/md'
 import About from './About'
 import { AiOutlineUser, AiOutlineUserAdd } from 'react-icons/ai'
+import { MoonLoader } from 'react-spinners'
 
 
-type ActiveChatType = {
-  conversation: conversationType,
-  user: string
-  openBody: boolean,
-  setOpenBody: (open: boolean) => void;
 
-}
 
-const endpoint: string = "http://localhost:9000/api/v1/conversation"
+const endpoint: string = import.meta.env.VITE_APP_ENDPOINT
 
 type conversationType = {
   members: [],
@@ -35,7 +30,7 @@ function SideBar({ openBody, setOpenBody }: ActiveChatType) {
 
     const fetchConversation = async () => {
 
-      await axios.get(`${endpoint}/${users.user._id}`).then((res) => {
+      await axios.get(`${endpoint}/conversation/${users.user._id}`).then((res) => {
         if (res.status === 200) {
           setConversation(res.data)
         } else {
@@ -85,6 +80,14 @@ function SideBar({ openBody, setOpenBody }: ActiveChatType) {
 
 
         <div className='flex flex-col mx-2 gap-7 overflow-y-scroll h-[50%] scrollbar-hide'>
+
+          {conversation.length === 0 && (
+
+            <div className='mx-auto mt-10'>
+            <MoonLoader size={30} color="#7269ef" />
+
+            </div>
+          )}
           {conversation.map((item) => (
             <ActiveChat openBody={openBody} setOpenBody={setOpenBody} conversation={item} key={item._id} user={users.user._id} />
           ))}
