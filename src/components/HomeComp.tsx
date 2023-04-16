@@ -36,13 +36,15 @@ const endpoint: string = "http://localhost:9000/api/v1/message/"
 
 const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody }) => {
     const users = useSelector((state: RootState) => state.user.userInfo)
+    const conversationId = useSelector((state: RootState) => state.user.conversationId)
 
+    console.log(conversationId)
 
     const [msg, setMsg] = useState<string>("")
     const [message, setMessage] = useState<messageType[]>([])
     const [openEmoji, setOpenEmoji] = useState<boolean>(false)
     const [allUser, setAllUser] = useState<[]>([])
-    const scroll = useRef()
+    const scroll = useRef<null | HTMLDivElement>()
 
     function onClick(emojiData: EmojiClickData, event: MouseEvent) {
         setMsg(msg + (emojiData.emoji));
@@ -70,6 +72,18 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
     // Fetch All Messages 
 
 
+    useEffect(() => {
+
+        const pusher = new Pusher("8eb4386a18c23cd290ee", {
+            cluster: "mt1",
+        });
+
+    
+
+        pusher.subscribe("")
+
+    })
+
 
 
     useEffect(() => {
@@ -79,7 +93,7 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
 
     useEffect(() => {
         const fetchMessage = async () => {
-            await axios.get(endpoint + conversationIdd).then((res) => {
+            await axios.get(endpoint + conversationId).then((res) => {
                 try {
                     setMessage(res.data)
                     console.log(message)
@@ -93,7 +107,7 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
 
 
         fetchMessage()
-    }, [])
+    }, [conversationId])
 
 
 
@@ -108,13 +122,11 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
         event.preventDefault()
 
         const userId = users.user._id
-        const data = { conversationId: conversationIdd, message: msg, senderId: userId }
+        const data = { conversationId: conversationId, message: msg, senderId: userId }
 
 
         await axios.post(endpoint, data).then((res) => {
             try {
-              
-
 
                 setMsg('')
             } catch (err) {
@@ -157,18 +169,25 @@ const HomeComp: React.FC<allType> = ({ conversationIdd, setOpenBody, openBody })
             </div>
 
             {/* Chat Box */}
-            <div className=" h-[70vh] flex flex-col pt-10 mt-6 px-10 overflow-y-scroll scrollbar-hide ">
-                {message?.map(item => (
-                    <div ref={scroll}>
+
+            {!message && !conversationId ? (<>
+                this is invalid
+            </>) :
+
+                (<div className=" h-[70vh] flex flex-col pt-10 mt-6 px-10 overflow-y-scroll scrollbar-hide ">
+                    {message?.map(item => (
+                        <div ref={scroll}>
 
 
-                        <ChatBox msg={item} key={item._id} />
-                    </div>
-                ))}
+                            <ChatBox msg={item} key={item._id} />
+                        </div>
+                    ))}
 
 
 
-            </div>
+                </div>)
+            }
+
 
 
             {/* Chstinput */}

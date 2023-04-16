@@ -15,7 +15,7 @@ import { RootState } from './type'
 
 function App() {
   const location = useLocation()
-  const [openBody, setOpenBody] = useState<boolean>(true)
+  const [openBody, setOpenBody] = useState<boolean>(false)
   const users = useSelector((state: RootState) => state.user.userInfo)
   const navigate = useNavigate()
 
@@ -35,7 +35,7 @@ function App() {
           <Route path='/' element={<AddFriendPage />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/chat/:conversation' element={<Conversation openBody={openBody} setOpenBody={setOpenBody}  />} />
+          <Route path='/chat' element={<Conversation openBody={openBody} setOpenBody={setOpenBody}  />} />
 
 
         </Routes>

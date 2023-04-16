@@ -1,7 +1,10 @@
 
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { userAction } from '../redux/userSlice'
+
 
 type conversationType = {
     members: [],
@@ -24,21 +27,25 @@ const endpoint: string = "http://localhost:9000/api/v1"
 
 function ActiveChat({ conversation, user, openBody, setOpenBody }: ActiveChatType) {
     const [getUser, setGetuser] = useState<userType | null>()
-  
+    const dispatch = useDispatch()
+
     useEffect(() => {
         const friendId = conversation?.members?.find((c: string) => c !== user)
 
         const fetchType = async () => {
             await axios.get(`${endpoint}/user?userId=${friendId}`).then((res) => {
                 setGetuser(res.data)
-                
+
             })
         }
         fetchType()
 
     }, [])
     return (
-        <Link onClick={() => setOpenBody(!openBody)} to={`/chat/${conversation?._id}`} className='flex items-center gap-3 hover:bg-[#e6ebf5] py-2 px-4 rounded transition cursor-pointer '>
+        <div onClick={() => {
+            dispatch(userAction.savedConversationId(conversation?._id))
+            setOpenBody(!openBody)
+        }} className='flex items-center gap-3 hover:bg-[#e6ebf5] py-2 px-4 rounded transition cursor-pointer '>
             <div>
                 <img src="/image/testimonials1.jpg" width={40} height={30} alt="Messanger chat"
                     className='rounded-full object-cover' />
@@ -56,7 +63,7 @@ function ActiveChat({ conversation, user, openBody, setOpenBody }: ActiveChatTyp
                 </div>
             </div>
 
-        </Link>
+        </div>
     )
 }
 

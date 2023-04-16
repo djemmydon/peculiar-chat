@@ -5,9 +5,10 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../type'
 import axios from 'axios'
 import styled from 'styled-components'
-import { BsCodeSlash, BsFillChatDotsFill } from 'react-icons/bs'
+import { BsChatDots, BsCodeSlash, BsFillChatDotsFill } from 'react-icons/bs'
 import { MdOutlineDarkMode } from 'react-icons/md'
 import About from './About'
+import { AiOutlineUser, AiOutlineUserAdd } from 'react-icons/ai'
 
 
 type ActiveChatType = {
@@ -104,15 +105,23 @@ function SideBar({ openBody, setOpenBody }: ActiveChatType) {
       <div className='mini'>
         <div className="mini_flex">
           <div className="item" onClick={() => setOpen(0)}>
-            <BsFillChatDotsFill />
+            <BsChatDots />
           </div>
           <div className="item" onClick={() => setOpen(1)}>
-            <BsFillChatDotsFill />
+
           </div>
-          <div className="item">
-            <BsFillChatDotsFill />
+          <div className="item" onClick={() => setOpen(1)}>
+            <AiOutlineUserAdd />
           </div>
+
         </div>
+
+
+        <div className="item item_bottom ">
+          <AiOutlineUser />
+        </div>
+
+
       </div>
     </Body>
   )
@@ -140,6 +149,7 @@ const Body = styled.div`
 
  .main{
   width:350px;
+  position:relative;
   @media screen and (max-width:800px) {
   width:100%;
 
@@ -177,8 +187,16 @@ const Body = styled.div`
       color:#7269ef;
 
       }
-    }
+    };
+
+  
 
   }
+
+  .item_bottom{
+      position:absolute;
+      bottom: 5rem;
+    
+    }
 }
 `

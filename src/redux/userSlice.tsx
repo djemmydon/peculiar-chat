@@ -20,6 +20,7 @@ const storeInLocalStorage = (data: UserType) => {
 
 const initialState = {
     userInfo: fetchFromLocalStorage(),
+    conversationId: ""
 };
 
 const UserSlice = createSlice({
@@ -32,8 +33,17 @@ const UserSlice = createSlice({
             storeInLocalStorage(state.userInfo);
         },
         updateUser: (state, action) => { },
+
+        savedConversationId: (state, action) => {
+            const conversation = action.payload
+            state.conversationId = conversation
+        }
+
     },
-});
+}
+
+
+);
 
 export const userAction = UserSlice.actions;
 export default UserSlice;

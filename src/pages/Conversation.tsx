@@ -15,12 +15,14 @@ function Conversation({setOpenBody, openBody}: {setOpenBody:boolean}) {
 
     const { conversation } = useParams<string>()
  
+    
 
 
 
 
     return (
         <div className='w-full'>
+            
             <HomeComp setOpenBody={setOpenBody} openBody={openBody}  conversationIdd={conversation} />
 
         </div>
