@@ -28,7 +28,7 @@ const HomeComp: React.FC<allType> = ({ setOpenBody, openBody }) => {
     const [message, setMessage] = useState<messageType[]>([])
     const [openEmoji, setOpenEmoji] = useState<boolean>(false)
     const [allUser, setAllUser] = useState<[]>([])
-    const scroll = useRef<null | HTMLDivElement>()
+    const scroll = useRef<HTMLDivElement>(null)
 
     function onClick(emojiData: EmojiClickData, event: MouseEvent) {
         setMsg(msg + (emojiData.emoji));
