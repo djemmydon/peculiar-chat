@@ -5,7 +5,6 @@ import { VscSmiley } from "react-icons/vsc"
 import { FaImage } from "react-icons/fa"
 import { AiOutlineSend } from "react-icons/ai"
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-// import { io } from "socket.io-client"
 
 import ChatBox from "./ChatBox"
 import axios from 'axios'
